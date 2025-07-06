@@ -27,6 +27,50 @@ export const imageBGRemoval = (req, res) => {
     res.send(image)
 }
 
+export const imageBGReplacement = (req, res) => {
+    const { public_id, prompt } = req.body
+
+    if (!public_id) {
+        return res.status(500).json({ error: 'public_id missing' })
+    }
+
+    const image = cloudinary.image(public_id, {
+        transformation: [
+            { effect: "background_removal" },
+            { effect: `gen_background_replace:prompt_a ${prompt}` }
+        ]
+    })
+
+    console.log(image)
+    res.send(image)
+}
+
+export const imageObjectRemoval = (req, res) => {
+    const { public_id, prompt } = req.body
+
+    if (!public_id) {
+        return res.status(500).json({ error: 'public_id missing' })
+    }
+
+    const image = cloudinary.image(public_id, {effect: `gen_remove:prompt_the ${prompt};remove-shadow_true`})
+
+    console.log(image)
+    res.send(image)
+}
+
+export const imageObjectReplacement = (req, res) => {
+    const { public_id, prompt_from, prompt_to } = req.body
+
+    if (!public_id) {
+        return res.status(500).json({ error: 'public_id missing' })
+    }
+
+    const image = cloudinary.image(public_id, {effect: `gen_replace:from_the ${prompt_from};to_a ${prompt_to}`})
+
+    console.log(image)
+    res.send(image)
+}
+
 export const imageCrop = (req, res) => {
     const { public_id, ratio } = req.body
 
@@ -65,14 +109,14 @@ export const imageGenerativeFill = (req, res) => {
     res.send(image)
 }
 
-export const imageUpscale = (req, res) => {
+export const imageEnhance = (req, res) => {
     const { public_id } = req.body
 
     if (!public_id) {
         return res.status(500).json({ error: 'public_id missing' })
     }
 
-    const image = cloudinary.image(public_id, { effect: "upscale" })
+    const image = cloudinary.image(public_id, {effect: "gen_restore"})
 
     console.log(image)
     res.send(image)
