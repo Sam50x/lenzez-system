@@ -13,3 +13,22 @@ export const uploadVideo = async (req, res) => {
         res.status(500).json({ success: false, error: e })
     }
 }
+
+export const videoCrop = (req, res) => {
+    const { public_id, ratio } = req.body
+
+    if (!public_id) {
+        return res.status(500).json({ error: 'public_id missing' })
+    }
+
+    const video = cloudinary.video(public_id, {
+        transformation: [
+            { aspect_ratio: ratio, gravity: "auto", crop: "fill" },
+            { quality: "auto" },
+            { fetch_format: "auto" }
+        ]
+    })
+
+    console.log(video)
+    res.send(video)
+}
