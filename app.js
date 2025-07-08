@@ -7,6 +7,8 @@ const app = express()
 
 cloudinaryConfig()
 
+app.use(cors({ origin: '*' })) // Not safe for production
+
 //built-in middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
